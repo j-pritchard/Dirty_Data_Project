@@ -1,0 +1,104 @@
+---
+title: "Decathlon"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+# About the task
+A data set was provided that contained results from two decathlon competitions, 
+Decastar and the Olympic Games. Times and distances for each of the ten events
+were given, as well as each competitor's final points total and rank in that
+competition. Not all athletes competed in both competitions so any totaling of 
+points across the competitions may be skewed by that.
+<br>
+<br>
+
+# Packages and Data Clean
+The following packages were used: tidyverse, here, janitor  
+  
+The initial clean tidied text strings and column titles and created a separate
+column for the competitor's names. The data contained no missing information and
+no assumptions needed to be made.  
+  
+There may be some merit in pivoting the table to be longer, but for the analysis
+questions that are given this will not be necessary.
+<br>
+<br>
+
+```{r include = FALSE}
+library(tidyverse)
+library(here)
+
+decathlon_data <- read_csv(here::here("clean_data/decathlon_clean_data.csv"))
+```
+# Analysis
+## Best Long Jump
+Who had the longest long jump seen in the data?
+```{r}
+decathlon_data %>% 
+  select(name, long_jump) %>% 
+  slice_max(long_jump, n = 3)
+```
+The competitor named Clay had the longest long jump, at 7.96 metres.
+<br>
+
+## Average 100 metre Times
+What was the average 100m time in each competition?
+```{r}
+decathlon_data %>% 
+  select(competition, x100m) %>% 
+  group_by(competition) %>% 
+  summarise(average_100m_time = round(mean(x100m), 3))
+```
+The average time for the 100m at Decaster was 11.175 seconds. At the Olympic
+games the average time was faster, at 10.916 seconds.
+<br>
+
+## Highest Points Total
+Who had the highest total points across both competitions?
+```{r}
+# Reading question as the totals from the two competitions combined
+decathlon_data %>% 
+  select(name, points, competition) %>% 
+  group_by(name) %>% 
+  summarise(total_points = sum(points)) %>% 
+  slice_max(total_points, n = 3)
+```
+Sebrle had the highest combined total from the two competitions. It should be
+noted than not all competitors competed at both competitions.
+<br>
+
+## Best Competitors' Shot-Put
+What was the shot-put scores for the top three competitors in each competition?
+```{r}
+decathlon_data %>% 
+  select(name, shot_put, points, competition) %>% 
+  group_by(competition) %>% 
+  slice_max(points, n = 3) # Top three competitors by points total
+```
+The top three points scorers at each competion are Sebrle, Clay and Karpov, in
+that order.  
+Their shot-put distances at Decaster were: 14.83, 14.26 and 14.77 metres
+respectively.  
+Their shot put distances at the Olympic Games were: 16.36, 15.23 and 15.93
+metres respectively.
+<br>
+
+## Fast 400m
+What was the average points for competitors who ran the 400m in less than 50
+seconds vs. those than ran 400m in more than 50 seconds?
+```{r}
+decathlon_data %>% 
+  select(x400m, points) %>% 
+  mutate(fast_400m = case_when(x400m <= 50 ~ TRUE,
+                               x400m > 50 ~ FALSE)) %>% 
+  group_by(fast_400m) %>% 
+  summarise(mean_points = round(mean(points), 0))
+```
+On average, competitors who ran the 400 metres in 50 seconds or under scored
+almost 400 points more across the whole competition than those who did not.

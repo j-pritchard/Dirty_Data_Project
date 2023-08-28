@@ -1,0 +1,168 @@
+---
+title: "Right Wing Authoritarianism"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+```{r include = FALSE}
+library(tidyverse)
+library(here)
+library(ggplot2)
+
+rwa_data <- read_csv(here::here("clean_data/rwa_data")) # load data
+```
+# About the task
+This data was collected in 2015 from a on-line version of the Right-wing
+Authoritarianism Scale. At the end of the test but before the results were
+displayed, respondents were asked if they would be willing to complete an
+additional survey and allow their responses to be saved for research.
+Only users who agreed yes are in this dataset. Individuals aged under 13 were
+not recorded.
+<br>
+<br>
+  
+# Packages and Data Clean
+The following packages were used: tidyverse, here, janitor, ggplot2 
+
+The data clean took only those columns that were helpful in answering queries.
+Several columns were recoded to make the responses more easily interpreted.
+Some of the questions had their scores inverted as they were assessed using a
+reversed scale. From the question responses, an RWA score was calculated as the
+mean from questions 3 to 22. Responses that had extreme responses in family
+size, test time, age and RWA score were modified or excluded (see Assumptions
+for more detailed information)
+<br>
+<br>
+
+# Assumptions
+The columns that are helpful in answer queries were: age, gender, handedness,
+family size, childhood, education level, test time and the question responses
+from question 3 to question 22.  Questions 1 and 2 are excluded as they are
+"warm up questions".
+
+Scores of zero indicate that a question has been left unanswered. If the RWA
+score, which is an average of the question responses, was zero that would
+indicate that no questions were answered. These responses were excluded.
+
+It is unreasonable for someone to answer this survey in less than 30 seconds.
+Any tests completed in under 30 seconds were excluded in their entirety. A 
+maximum time of 2 hours seems more than reasonable. Any time over 7200 was set
+to NA.
+
+The oldest person in the world in 2015 was 117 years old. Any response with an 
+age over 117 had the age set to NA. There is already a lower limit of 13 on age.
+
+Any respondent who claimed they were one of 21 siblings or more had that entry
+set as NA. As the question includes the respondent then 0 is not a possible
+answer. These were also set to NA.
+<br>
+<br>
+
+# Analysis
+## Gender differences
+What’s the average RWA score for each gender?
+```{r}
+rwa_data %>% 
+  select(gender, rwa_score) %>% 
+  group_by(gender) %>% 
+  summarise(mean_rwa_score = round(mean(rwa_score), 2))
+```
+Men had the highest mean RWA score at 3.11.  
+Women had a mean RWA score of 2.46.
+Respondents who identified as "other" had a mean RWA score of 1.87.
+Respondents who didn't answer the question had a mean RWA score of 2.82.
+<br>
+
+## Handedness
+What’s the average RWA score for left handed people vs. right handed people.
+```{r}
+rwa_data %>% 
+  select(hand, rwa_score) %>% 
+  group_by(hand) %>% 
+  summarise(mean_rwa_score = round(mean(rwa_score), 2))
+```
+Respondents that claimed to be right handed and those who claimed to be left
+handed had a mean RWA score of 2.85.  
+Ambidextrous respondents had a mean RWA score of 3.16.  
+Respondents who didn't answer the question had a mean RWA score of 3.21.
+<br>
+
+## Family Size vs Childhood
+What’s the average family size for each type of childhood?
+```{r}
+rwa_data %>% 
+  select(childhood, familysize) %>% 
+  group_by(childhood) %>% 
+  summarise(mean_kids = round(mean(familysize, na.rm = TRUE), 2))
+```
+Family size is defined by the question "Including you, how many children did
+your mother have?". Based on this query, there appears to be a trend that the
+more rural your upbringing, the more maternal siblings you were likely to have
+had.
+<br>
+
+## Test Time
+What’s the average time to take the test for each education level?
+```{r}
+rwa_data %>% 
+  select(education, testelapse) %>% 
+  group_by(education) %>% 
+  summarise(mean_time = round(mean(testelapse, na.rm = TRUE), 0)) %>% 
+  arrange(match(education, c("less than high school", "high school",
+                             "university", "postgrad")))
+```
+After removing times that exceeded two hours, there remained no great difference
+in the average time taken to complete the survey. Respondents who didn't declare
+their level of education were fastest, followed by postgraduates, high school
+graduates and undergraduates. Those who didn't have a high school education
+were slowest on average.
+<br>
+
+## Plot of Q4
+Create a plot of results of question 4.  
+
+Note that the results for question 4 have been reversed. The question was
+originaly reverse tested, with the results flipped back during cleaning.
+```{r}
+Frequency <- rwa_data %>% 
+  group_by(q4) %>% 
+  summarise(Frequency = n()) %>% 
+  pull(Frequency)
+
+Response <- as.character(c(0:9))
+
+q4data <- data.frame(Response, Frequency)
+
+ggplot(q4data, aes(x = Response, y = Frequency)) +
+  geom_col(color = "#000000", fill = "#0099f9") +
+  labs(
+    title = "RWA Authoritarianism",
+    subtitle = "Responses for Q4 (Reversed)",
+    caption = "Source: https://openpsychometrics.org/_rawdata/ "
+  )
+```
+
+
+## Age Bands
+What is the average RWA score for people aged under 18, 18 to 25, 26 to 40, 
+41 to 60, and over 60?
+```{r}
+rwa_data %>%
+  mutate(age = case_when(age < 18 ~ "Under 18",
+                         age <= 25 ~ "18 to 25",
+                         age <= 40 ~ "26 to 40",
+                         age <= 60 ~ "41 to 60",
+                         age <= 116 ~ "Over 60",
+                         .default = NA)) %>% 
+  group_by(age) %>% 
+  summarise(mean_rwa_score = round(mean(rwa_score), 2)) %>% 
+  arrange(match(age, c("Under 18", "18 to 25", "26 to 40", "41 to 60",
+                       "Over 60", NA)))
+```
+Based on these age brackets, on average, the younger a respondent was the higher
+their RWA score was.

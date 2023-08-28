@@ -1,0 +1,124 @@
+---
+title: "Seabirds"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+```{r include = FALSE}
+library(tidyverse)
+library(here)
+
+seabirds <- read_csv(here::here("clean_data/seabirds.csv")) # load data
+```
+# About the task
+The data provided has details of seabird sightings recorded from mid 1969
+to the end of 1990. Information of the birds sighted is held on a separate sheet
+from the information about the location, date and time of the sightings.  To
+investigate the data only a small selection of columns are needed from the
+detailed records.  
+
+The "count" data (the number of birds seen in an observation) does not seem
+particularly reliable, with lots of NA values and some large estimates that go
+as high as 99999. For that reason, some of the conclusions involving total 
+numbers of birds should be treated with caution.
+<br>
+<br>
+  
+# Packages and Data Clean
+The following packages were loaded: tidyverse, here, readxl  
+
+For the analysis, from the bird data, only details about the record ID, bird
+species and count were needed. From ship data, only the record ID and latitude
+of the ships were needed. The record ID is a primary key in the ship data and a
+foreign key in the bird data, leading to a one-to-many relationship when the
+data is joined.
+<br>
+<br>
+
+# Assumptions
+In the count column there are around 200 observations that exceed 500 birds,
+with some counts as high as 99999. I chose to make these counts NA, as I didn't
+want wild estimates throwing off my analysis. The presence of these large
+numbers makes me doubt the validity of some of the data. I would like more
+context as to how these large estimates are arrived at.  
+
+There are NA values in the count column. Some of these appear to relate to days
+when no observations of birds occurred. However, others are observations of a
+particular species where, presumably, the observer has forgotten to enter a
+number of birds or been unable to count them. These observations have been left
+in the data as they are an observation of a particular species on a particular
+day, but the NA values will need to be skipped when performing calculations.
+
+The latitude column also contains NA values. This will affect he result of
+question 3.
+<br>
+<br>
+
+# Analysis
+## Most Sightings
+Which bird had the most individual sightings?
+```{r message=FALSE}
+seabirds %>% 
+  group_by(common_name, sci_name, abbreviation) %>%
+  summarise(sightings = n()) %>% 
+  ungroup() %>% 
+  slice_max(sightings, n = 3)
+```
+The most individual sightings were of the wandering albatross sensu lato PL2, 
+scientific name *Diomedea antipodensis / exulans PL2*.
+<br>
+
+## Most Birds
+Which bird had the highest total count?
+```{r message=FALSE}
+seabirds %>% 
+  group_by(common_name, sci_name, abbreviation) %>%
+  summarise(total_count = sum(count, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  slice_max(total_count, n = 3)
+```
+After excluding any count that exceeded 500, the highest count for any single
+species was the prion, scientific name *Pachyptila*.  It should be noted that
+this total likely still contains estimated numbers so may not be entirely
+reliable.
+<br>
+
+## Most Birds Above -30 Latitude
+Which bird had the highest total count above a latitude of -30?
+```{r message=FALSE}
+seabirds %>% 
+  filter(lat > -30) %>% 
+  group_by(common_name, sci_name, abbreviation) %>%
+  summarise(total_count = sum(count, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  slice_max(total_count, n = 3)
+```
+Above a latitude of -30 degrees, the wedge-tailed shearwater,
+*Puffinus pacificus*, had the highest total count.
+<br>
+
+## Solo Birds
+How many different types of birds were only ever seen in groups of one?
+```{r}
+seabirds %>% 
+  group_by(common_name) %>%
+  filter(sum(count, na.rm = TRUE) == n()) %>% 
+  distinct(common_name) %>% 
+  nrow()
+```
+78 distinct species of bird were only observed alone.
+<br>
+
+## Penguins
+How many penguins were seen?
+```{r}
+seabirds %>%
+  filter(str_detect(common_name, "(?i)penguin")) %>% 
+  summarise(total_count = sum(count, na.rm = TRUE))
+```
+In total, 158 penguins were seen.

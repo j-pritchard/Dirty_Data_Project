@@ -1,0 +1,301 @@
+---
+title: "Hallowe'en Candy"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+# About the Task
+Since 2006 David Ng and Ben Cohen have conducted a light-hearted ranking of
+Hallowe'en candy. At first they focused on personal, anecdotal experience. What 
+started as an amusing exercise for their blog ballooned into a quasi-scientific
+analysis of public candy perceptions. In this task, I have taken three years of
+their data and will analyse some sweeping generalisations that can be made from
+this not-so-reliable cross-section of society.
+<br>
+<br>
+
+# Packages
+The following packages were used: read_xl, tidyverse, here, janitor. The 
+package plyr was used for one question only.
+<br>
+<br>
+
+# Data Clean  
+The initial clean removed unwanted columns from the data sets. The candy data
+contained a number of questions that were comic references or not candy at all;
+these columns were excluded (see *Assumptions* for more detail). Column titles
+were tidied up and an id assigned to each observation. Three years of
+observations were combined and a further sweep of the columns was carried out to
+ensure that matching candies had been combined where possible.  
+  
+Character strings were removed from respondents' ages. Some rows had ages that
+were outside a reasonable range, these were set to NA (see *Assumptions* for
+more detail). The column was transformed to a numerical type.
+  
+In 2016 and 2017, respondents were asked to give their country. Where people had
+responded with fictitious countries or joke answers, their responses were set to
+NA. Wherever possible, a real country or area was left in the data  (see 
+*Assumptions* for more detail). All variations of USA, Canada and UK were
+collected together.  
+
+A short script at the end assigns point values to the candy ratings for the
+questions in section 6
+<br>
+<br>
+
+# Assumptions  
+## Candy
+The following columns were excluded from the analysis as they are not candy. The
+reason, if needed, *is in italics*.  
+* Abstained from M&M'ing, *joke answer following lots of M&M types*  
+* Bonkers (the board game)  
+* Box'o'Raisins, *fruit*  
+* Broken glow stick  
+* Cash, or other forms of legal tender  
+* Chardonnay  
+* Creepy Religious comics/Chick Tracts, *comic*  
+* Dental paraphenalia  
+* Generic Brand Acetaminophen, *medicine*  
+* Glow sticks  
+* Healthy Fruit  
+* Hugs (actual physical hugs)  
+* JoyJoy (Mit Iodine), *ficticious, from the Simpsons*  
+* Kale smoothie  
+* Lapel Pins  
+* Minibags of chips, *crisps*  
+* Mint Leaves, *no evidence of mass-marketed candy of this name*  
+* Peanut Butter Jars  
+* Pencils  
+* Person of Interest Season 3 DVD Box Set  
+* Peterson Brand Sidewalk Chalk  
+* Real Housewives of Orange County Season 9 Blue-Ray  
+* Sandwich-sized bags filled with BooBerry Crunch, *cereal*  
+* Senior Mints, *senior mints exist only as a joke product*  
+* Spotted Dick, *dessert*  
+* Sweetums, *ficticious, from Parks & Rec*  
+* Vials of pure high fructose corn syrup, for main-lining into your vein  
+* Vicodin, *medicine*  
+* White Bread  
+* Whole Wheat anything  
+Open ended questions allowing further examples of candy that elicits "joy" or
+"despair" were discounted.  
+The survey concluded with a number of topical or joke questions that were also
+excluded for not being candy related.  
+
+Despite concerns, the following candies were allowed to remain. Due to the age
+of some respondents, discontinued candy was allowed to remain.  
+* Reggie Jackson Bar, *discontinued 1981*  
+* Trail Mix, *usually contains candy*  
+* Any full-sized candy bar, *generic but valid*  
+* Anonymous brown globs that come in black and orange wrappers, *some respondents knew what these were*  
+* Bonkers, *discontinued 1990s*  
+* Goo Goo Clusters, *niche but definitely candy*
+<br>
+
+## Ages
+When tidying respondents' ages, the following assumptions were made:  
+* character strings and punctuation were removed (resulting blanks become NA)  
+* under 5 set to NA (assume no respondent was genuinely under 5 years old)  
+* over 117 set to NA (the oldest person alive at the time was 117)  
+This left 441 respondents with no age. It was noted that there were still 18
+respondents over the age of 80, with one claiming to be 115 years old.
+<br>
+
+## Countries
+After tidying answers, the following assumptions were applied.  
+
+### Numerical, Ficticious Countries or Joke Answers
+Numerical answers were set to NA during the initial tidy. The following
+responses were deemed equivalent to not answering the question and changed to NA.  
+a, atlantis, denial, earth, fear_and_loathing, god (came from "god's country"),
+i_don (came from "i don't know anymore"), insanity_lately, narnia, neverland,
+one_of_the_best_ones, see_above, somewhere, subscribe_to_dm (came from 
+"subscribe to dm4uz3 on youtube), there_isn (came from "there isn't one for old
+men"), "this_one".  
+  
+### Canada, USA, UK and other
+The main question that involved countries was about Canada, USA and UK. At that
+time, all other non-NA answers would be grouped as "other".  
+  
+The following answers were deemed to mean Canada:  
+can, i_pretend_to_be_from_canada, soviet_canuckistan, canada.  
+  
+The following answers were grouped as UK:  
+endland, england, scotland, united_kindom, united_kingdom, uk.  
+  
+The following mess was set to be USA:  
+ahem (came from "ahem....amerca"), alaska, america, california, eua, merica,
+murica, murrika, new_jersey, new_york, north_carolina, pittsburgh, sub (came
+from "sub-canadian north america... 'merica"), the_best_one_ (came from "the
+best one - usa"), the_yoo_ess_of_aaayyyyyy, trumpistan, u_s, u_s_a, ud,
+unhinged_states, unied_states, unite_states, united_sates, united_staes, 
+united_state, united_statea, united_stated, united_statss, united_stetes,
+united_ststes, unites_states, units_states, us_of_a, usa_usa_usa,
+usa_usa_usa_usa, usaa, usas, usausausa, ussa, the_united_states,
+the_united_states_of_america, united_states, united_states_of_america, us, usa.  
+  
+Any other answer that was deemed to be a real geographical area was left to be
+grouped into the "other" category.  These included such nuggets as:  
+a_tropical_island_south_of_the_equator, canae (in Turkey), europe, n (came from
+n.america), not_the_us_or_canada.  
+A few respondents answered cascadia or the_republic_of_cascadia, which is a
+region in western North America extending across the US/Canada border. It was
+deemed that these respondents would not want to be grouped with either US or
+Canada so were left separate.  
+<br>
+<br>
+
+```{r include = FALSE}
+library(tidyverse)
+library(here)
+
+all_candy <- read_csv(here::here("clean_data/all_candy.csv")) # Clean data
+```
+# Analysis
+## Total Candy Ratings
+What is the total number of candy ratings given across the three years.
+```{r}
+all_candy %>% 
+  select(any_full_sized_candy_bar:york_peppermint_patties) %>% # columns containing candy data
+  summarise(num_ratings = sum(!is.na(.)))
+```
+Once non-candies have been removed, there are 583908 candy ratings from the
+three years of data.
+<br>
+
+##  Average Age of Trick-or-Treaters
+What was the average age of people who are going out trick or treating?
+```{r}
+all_candy %>% 
+  select(age, going_out) %>% 
+  group_by(going_out) %>% 
+  summarise(mean_age = round(mean(age, na.rm = TRUE), 1),
+            median_age = median(age, na.rm = TRUE))
+```
+The mean age of survey respondents who said they were going trick-or-treating
+was 35.2 years old. The median age was 37.
+<br>
+
+## Average Age of Non-Trick-or-Treaters
+What was the average age of people who are not going trick or treating?  
+  
+The mean age of survey respondents who said they were not going
+trick-or-treating was 39.2 years old. The median age was 37.5.
+<br>
+
+## Ratings Summary
+For each of joy, despair and meh, which candy bar received the most of these
+ratings?  
+
+```{r}
+all_candy %>% 
+  select(any_full_sized_candy_bar:york_peppermint_patties) %>% 
+  plyr:: ldply(function(x) sum(x == "JOY", na.rm = TRUE)) %>% 
+  rename(candy = .id, amount_of_joy = V1) %>% 
+  arrange(desc(amount_of_joy)) %>% 
+  head(3)
+
+all_candy %>% 
+  select(any_full_sized_candy_bar:york_peppermint_patties) %>% 
+  plyr::ldply(function(x) sum(x == "MEH", na.rm = TRUE)) %>% 
+  rename(candy = .id, amount_of_meh = V1) %>% 
+  arrange(desc(amount_of_meh)) %>% 
+  head(3)
+
+all_candy %>% 
+  select(any_full_sized_candy_bar:york_peppermint_patties) %>% 
+  plyr::ldply(function(x) sum(x == "DESPAIR", na.rm = TRUE)) %>% 
+  rename(candy = .id, amount_of_despair = V1) %>% 
+  arrange(desc(amount_of_despair)) %>% 
+  head(3)
+```
+Full sized candy bars elicited the most "joy" from participants of the survey.
+The most joy from a specific candy was Reece's Peanut Butter Cups.  
+More participants thought lollipops were "meh" than any other candy.  
+Gum from baseball cards brought "despair" from the most people.
+<br>
+
+## Starburst Despair
+How many people rated Starburst as despair?
+```{r}
+count(all_candy, starburst)
+```
+1990 people rated starburst as despair.
+<br>
+<br>
+
+# Analysis using points allocation
+For the remaining queries, candy ratings have been assigned as points:  
+* JOY is worth +1  
+* MEH is worth 0  
+* DESPAIR is worth -1
+```{r include = FALSE} 
+all_candy_points <- read_csv(here::here("clean_data/all_candy_points.csv"))
+```
+<br>
+
+## Most Popular Candy by Gender
+What was the most popular candy bar for each gender in the dataset?
+```{r}
+all_candy_points %>% 
+  group_by(gender) %>% 
+  summarise(across(any_full_sized_candy_bar:york_peppermint_patties, sum)) %>% 
+  pivot_longer(cols = any_full_sized_candy_bar:york_peppermint_patties,
+               names_to = "candy") %>% 
+  group_by(gender) %>% 
+  slice_max(value, n = 2)
+```
+In every gender category full sized candy bars were the most popular hallowe'en
+candy. The most popular specific candies were Reese's Peanut Butter Cups for
+respondents who identified themselves as female, male and those who didn't
+answer the question. Those who selected "I'd rather not say" liked KitKats; 
+"Other" enjoyed Twixes.  
+Note that gender was not asked for in the 2015 survey, resulting in a large
+number of responses in NA.
+<br>
+
+## Most Popular Candy by Year
+What was the most popular candy bar in each year?
+```{r}
+all_candy_points %>% 
+  mutate(year_id = str_sub(year_id, 1, 4)) %>% 
+  group_by(year_id) %>% 
+  summarise(across(any_full_sized_candy_bar:york_peppermint_patties, sum)) %>% 
+  pivot_longer(cols = any_full_sized_candy_bar:york_peppermint_patties,
+               names_to = "candy") %>% 
+  group_by(year_id) %>% 
+  slice_max(value, n = 2)
+```
+Each year, full sized candy bars proved to be most popular with respondents. In
+terms of a specific type of of candy, Reese's Peanut Butter Cups took the crown
+in 2015 and 2017. KitKat was most popular in 2016.
+
+## Most Popular Candy by Country
+What was the most popular candy bar for people in US, Canada, UK, and all other countries?
+```{r}
+all_candy_points %>% 
+  drop_na(country) %>% 
+  mutate(country = case_when(country == "USA" ~ "USA",
+                             country == "CAN" ~ "Canada",
+                             country == "GBR" ~ "UK",
+                             .default = "other")
+         ) %>% 
+  group_by(country) %>% 
+  summarise(across(any_full_sized_candy_bar:york_peppermint_patties, sum)) %>% 
+  pivot_longer(cols = any_full_sized_candy_bar:york_peppermint_patties,
+               names_to = "candy") %>% 
+  group_by(country) %>% 
+  slice_max(value, n = 2)
+```
+In each of the country categories, full sized candy bars were most popular.  
+Specific types of candy that were most popular were:  
+* Reese's Peanut Butter Cups in the USA  
+* Lindt Truffles, Rolos and Toblerone (three-way-tie) for the UK  
+* KitKat in Canada and in "other countries"  
+Note that country was not asked for in the 2015 survey, resulting in a large
+number of NA being dropped from the reults.
