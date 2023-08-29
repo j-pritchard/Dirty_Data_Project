@@ -10,27 +10,27 @@ This project involved reading in several messy datasets that needed cleaning, ti
   <tr>
     <td>Decathlon</td>
     <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/tree/main/task1">Task 1</a></td>
-    <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task1/analysis_and_documentation/decathlon.html">Decathlon Analysis</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task1/analysis_and_documentation/decathlon.html">Decathlon Analysis</a></td>
   </tr>
   <tr>
     <td>Cake Ingredients</td>
     <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/tree/main/task2">Task 2</a></td>
-    <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task2/analysis_and_documentation/cake_ingredients.html">Cakes Analysis</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task2/analysis_and_documentation/cake_ingredients.html">Cakes Analysis</a></td>
   </tr>
   <tr>
     <td>Seabird Sightings</td>
     <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/tree/main/task3">Task 3</a></td>
-    <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task3/analysis_and_documentation/seabirds.html">Seabirds Analysis</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task3/analysis_and_documentation/seabirds.html">Seabirds Analysis</a></td>
   </tr>
   <tr>
     <td>Halloween Candy</td>
     <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/tree/main/task4">Task 4</a></td>
-    <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task4/analysis_and_documentation/halloween_candy.html">Candy Analysis</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task4/analysis_and_documentation/halloween_candy.html">Candy Analysis</a></td>
   </tr>
   <tr>
     <td>Right Wing Authoritarianism</td>
     <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/tree/main/task5">Task 5</a></td>
-    <td><a href="https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task5/analysis_and_documentation/rwa.html">RWA Analysis</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/j-pritchard/Dirty_Data_Project/blob/main/task5/analysis_and_documentation/rwa.html">RWA Analysis</a></td>
   </tr>
 </table>
 
