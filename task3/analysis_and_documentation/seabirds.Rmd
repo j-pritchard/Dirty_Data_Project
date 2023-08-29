@@ -6,7 +6,7 @@ output:
     toc_float: true
     number_sections: true
     df_print: paged
-    css: ../../../styles.css
+    css: ../../styles.css
   pdf_document: default
 ---
 ```{r include = FALSE}
