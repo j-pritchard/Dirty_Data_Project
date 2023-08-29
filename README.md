@@ -1,4 +1,4 @@
-# Dirty_Data_Project
+# Dirty Data Project
 This project involved reading in several messy datasets that needed cleaning, tidying, and joining. Analysis was then carried out on the cleaned data.
 
 <table>
